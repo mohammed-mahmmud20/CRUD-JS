@@ -39,26 +39,31 @@ submit.onclick = function () {
         count:count.value,
         category:category.value.toLowerCase(),
     }
-    // count and update
-    if (mood === 'create') {
-        if (newPro.count > 1) {
-            for (let i = 0; i < newPro.count; i++) {
-                dataPro.push(newPro);            
+    // count and update and clean data
+    if (title.value != ''
+    && price.value != ''
+    && category.value != ''
+    && newPro.count < 100) 
+    {
+        if (mood === 'create') {
+            if (newPro.count > 1) {
+                for (let i = 0; i < newPro.count; i++) {
+                    dataPro.push(newPro);            
+                }
+            }else {
+                dataPro.push(newPro);
             }
         }else {
-            dataPro.push(newPro);
+            dataPro[tmp]=newPro;
+            mood = 'create';
+            submit.innerHTML = 'Create';
+            count.style.display = 'block';
         }
-    }else {
-        dataPro[tmp]=newPro;
-        mood = 'create';
-        submit.innerHTML = 'Create';
-        count.style.display = 'block';
+        clearData()
     }
-
     // save localStorage
     localStorage.setItem('product',JSON.stringify(dataPro));
     total.style.background = '#a00d02';
-    clearData()
     showData()
 }
 // clear inputs
@@ -79,7 +84,7 @@ function showData() {
     for (let i = 0; i < dataPro.length; i++) {
         table += `
             <tr>
-                <td>${i}</td>
+                <td>${i+1}</td>
                 <td>${dataPro [i].title}</td>
                 <td>${dataPro [i].price}</td>
                 <td>${dataPro [i].taxes}</td>
@@ -152,7 +157,7 @@ function searchData(value) {
     for (let i = 0; i < dataPro.length; i++) {
         if (searchMode == 'Title') {
             if (dataPro[i].title.includes(value.toLowerCase())) {
-                table += `
+                table +=` 
                     <tr>
                         <td>${i}</td>
                         <td>${dataPro [i].title}</td>
@@ -169,7 +174,7 @@ function searchData(value) {
             }
     }else {
         if (dataPro[i].category.includes(value.toLowerCase())) {
-                table += `
+                table +=`
                 <tr>
                     <td>${i}</td>
                     <td>${dataPro [i].title}</td>
@@ -188,4 +193,3 @@ function searchData(value) {
 }
     document.getElementById("tbody").innerHTML = table;
 }
-// clean data
